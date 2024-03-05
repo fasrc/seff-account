@@ -12,7 +12,7 @@ import os
 
 import termplotlib as tpl
 
-__version__ = 0.4
+__version__ = 0.1
 debug = False
 
 
@@ -160,14 +160,10 @@ if __name__ == "__main__":
 
     desc = (
         """
-    seff-array v%s
-    https://github.com/ycrc/seff-array
+    seff-account v%s
+    https://github.com/fasrc/seff-account
     ---------------
-    An extension of the Slurm command 'seff' designed to handle job arrays and display information in a histogram.
-
-    To use seff-array on the job array with ID '12345678', simply run 'seff-array 12345678'.
-
-    Other things can go here in the future.
+    An extension of the Slurm command 'seff' designed to summarize job usage for users and accounts over a period of time and display information in a histogram.
     -----------------
     """
         % __version__
@@ -177,7 +173,8 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=desc,
     )
-    parser.add_argument("jobid")
+    parser.add_argument("-u", "--user", action="store", dest="user")
+    parser.add_argument("-a", "--account", action="store", dest="account")    
     parser.add_argument("-c", "--cluster", action="store", dest="cluster")
     parser.add_argument('--version', action='version',  version='%(prog)s {version}'.format(version=__version__))
     args = parser.parse_args()
