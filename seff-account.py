@@ -1,4 +1,4 @@
-#!/gpfs/gibbs/pi/support/software/utilities/bin/python
+#!/n/sw/envs/seff-array/bin/python3
 
 import argparse
 import subprocess
