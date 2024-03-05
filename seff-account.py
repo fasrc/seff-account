@@ -174,7 +174,9 @@ if __name__ == "__main__":
         description=desc,
     )
     parser.add_argument("-u", "--user", action="store", dest="user")
-    parser.add_argument("-a", "--account", action="store", dest="account")    
+    parser.add_argument("-a", "--account", action="store", dest="account")
+    parser.add_argument("-S", "--starttime", action="store", dest="starttime") 
+    parser.add_argument("-E", "--endtime", action="store", dest="endtime")   
     parser.add_argument("-c", "--cluster", action="store", dest="cluster")
     parser.add_argument('--version', action='version',  version='%(prog)s {version}'.format(version=__version__))
     args = parser.parse_args()
