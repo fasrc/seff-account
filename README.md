@@ -1,8 +1,8 @@
-# seff-array 
+# seff-account
 
-An extension of the Slurm command 'seff' designed to handle job arrays and offers the option to display information in a histogram.       
+A modification of [seff-array](https://github.com/ycrc/seff-array) by Yale Center for Research Computing which is an extension of the Slurm command 'seff' designed to handle summarizing job usage for users and accounts over a period of time displays the information in a histogram.       
 
-seff-array generates three types of histograms: 
+seff-account generates three types of histograms: 
 
     1. CPU Efficiency (utilization vs runtime)
     1. Maximum memory usage versus the requested memory
@@ -10,11 +10,7 @@ seff-array generates three types of histograms:
 
 ## Usage:
 
-    seff-array [-h] jobid [-c cluster]
-
-To use seff-array on the job array with ID `12345678`, simply run `seff-array 12345678`.
-For job-arrays, statistics and histograms will be produced for CPU, memory, and time efficiencies.
-For single jobs, an output similar to `seff` will be produced.
+    seff-account [-h] jobid [-c cluster]
 
 If run on a cluster that shares a single Slurm database, you can pass the name of the alternate cluster via `-c cluster`.  
 The `SLURM_CLUSTER_NAME` env-var is checked and passed to `sacct` if present. 
