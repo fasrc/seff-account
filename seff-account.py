@@ -48,7 +48,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
         res = str(res, 'utf-8')
         df_short = pd.read_csv(StringIO(res), sep='|')
 
-        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxVMSize'
+        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxRSS'
         if cluster != None:
             q = f'sacct --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --cluster {cluster}'
         else:
@@ -66,7 +66,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
         res = str(res, 'utf-8')
         df_short = pd.read_csv(StringIO(res), sep='|')
 
-        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxVMSize'
+        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxRSS'
         if cluster != None:
             q = f'sacct --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster}'
         else:
@@ -88,7 +88,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     df_long  = df_long.fillna(0.)
 
     df_long['JobID'] = df_long.JobID.map(lambda x: x.split('.')[0])
-    df_long['MaxVMSize'] = df_long.MaxVMSize.str.replace('G', '').astype('float')
+    df_long['MaxRSS'] = df_long.MaxRSS.str.replace('G', '').astype('float')
     df_long['ReqMem'] = df_long.ReqMem.str.replace('G', '').astype('float')
     df_long['TotalCPU'] = df_long.TotalCPU.map(lambda x: time_to_float(x))
     df_long['Elapsed'] = df_long.Elapsed.map(lambda x: time_to_float(x))
@@ -137,7 +137,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     
     cpu_use =  df_long_finished.TotalCPU.loc[df_long_finished.groupby('JobID')['TotalCPU'].idxmax()]
     time_use = df_long_finished.Elapsed.loc[df_long_finished.groupby('JobID')['Elapsed'].idxmax()]
-    mem_use =  df_long_finished.MaxVMSize.loc[df_long_finished.groupby('JobID')['MaxVMSize'].idxmax()]
+    mem_use =  df_long_finished.MaxRSS.loc[df_long_finished.groupby('JobID')['MaxRSS'].idxmax()]
     cpu_eff = np.divide(np.divide(cpu_use.to_numpy(), time_use.to_numpy()),cores)
 
     print("--------------------------------------------------------")
