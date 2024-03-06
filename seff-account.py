@@ -80,7 +80,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     df_long_finished = df_long[df_long.State.isin(finished_state)]
 
     if len(df_long_finished) == 0:
-        print(f"No jobs in {job_id} have completed.")
+        print(f"No jobs have completed.")
         return -1
         
     # cleaning
@@ -113,7 +113,6 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     
     print("--------------------------------------------------------")
     print("Job Information")
-    print(f"ID: {job_id}")
     print(f"Name: {job_name}")
     print(f"Cluster: {cluster}")
     print(f"User/Group: {user}/{group}")
