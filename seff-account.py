@@ -36,30 +36,44 @@ def time_to_float(time):
     return days + hours + mins + secs
 
 #@profile
-def job_eff(job_id=0, cluster=os.getenv('SLURM_CLUSTER_NAME')):
+def job_eff(cluster=os.getenv('SLURM_CLUSTER_NAME')):
 
-    if job_id==0:
-        df_short = pd.read_csv('seff_test_oneline.csv', sep='|')
-        df_long = pd.read_csv('seff_test.csv', sep='|')
-    else:
+    if user != None:
         fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster'
         if cluster != None:
-            q = f'sacct -X --units=G -P {fmt} -j {job_id} --cluster {cluster}'
+            q = f'sacct -X --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --cluster {cluster}'
         else:
-            q = f'sacct -X --units=G -P {fmt} -j {job_id}'
+            q = f'sacct -X --units=G -P {fmt} -u {user} -S {starttime} -E {endtime}'
         res = subprocess.check_output([q], shell=True)
         res = str(res, 'utf-8')
         df_short = pd.read_csv(StringIO(res), sep='|')
 
         fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxVMSize'
         if cluster != None:
-            q = f'sacct --units=G -P {fmt} -j {job_id} --cluster {cluster}'
+            q = f'sacct --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --cluster {cluster}'
         else:
-            q = f'sacct --units=G -P {fmt} -j {job_id}'
+            q = f'sacct --units=G -P {fmt} -u {user} -S {starttime} -E {endtime}'
         res = subprocess.check_output([q], shell=True)
         res = str(res, 'utf-8')
         df_long = pd.read_csv(StringIO(res), sep='|')
+    elif account != None:
+        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster'
+        if cluster != None:
+            q = f'sacct -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster}'
+        else:
+            q = f'sacct -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime}'
+        res = subprocess.check_output([q], shell=True)
+        res = str(res, 'utf-8')
+        df_short = pd.read_csv(StringIO(res), sep='|')
 
+        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxVMSize'
+        if cluster != None:
+            q = f'sacct --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster}'
+        else:
+            q = f'sacct --units=G -P {fmt} -A {account} -S {starttime} -E {endtime}'
+        res = subprocess.check_output([q], shell=True)
+        res = str(res, 'utf-8')
+        df_long = pd.read_csv(StringIO(res), sep='|')
 
     # filter out pending and running jobs
     finished_state = ['COMPLETED', 'FAILED', 'OUT_OF_MEMORY', 'TIMEOUT', 'PREEMPTEED']
@@ -175,8 +189,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("-u", "--user", action="store", dest="user")
     parser.add_argument("-a", "--account", action="store", dest="account")
-    parser.add_argument("-S", "--starttime", action="store", dest="starttime") 
-    parser.add_argument("-E", "--endtime", action="store", dest="endtime")   
+    parser.add_argument("-S", "--starttime", action="store", dest="starttime", default="now-1days") 
+    parser.add_argument("-E", "--endtime", action="store", dest="endtime", default="now")   
     parser.add_argument("-c", "--cluster", action="store", dest="cluster")
     parser.add_argument('--version', action='version',  version='%(prog)s {version}'.format(version=__version__))
     args = parser.parse_args()
