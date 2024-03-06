@@ -36,7 +36,7 @@ def time_to_float(time):
     return days + hours + mins + secs
 
 #@profile
-def job_eff(cluster=os.getenv('SLURM_CLUSTER_NAME')):
+def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_NAME')):
 
     if user != None:
         fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster'
@@ -195,4 +195,4 @@ if __name__ == "__main__":
     parser.add_argument('--version', action='version',  version='%(prog)s {version}'.format(version=__version__))
     args = parser.parse_args()
 
-    job_eff(args.jobid, args.cluster)
+    job_eff(args.user, args.account, args.starttime, args.endtime, args.cluster)
