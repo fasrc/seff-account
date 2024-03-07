@@ -87,8 +87,8 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     df_short = df_short.fillna(0.)
     df_long  = df_long.fillna(0.)
 
-    df_long['MaxRSS'] = df_long.MaxRSS.astype('float')
-    df_long['ReqMem'] = df_long.MaxReqMem.astype('float')
+    df_long['MaxRSS'] = df_long.MaxRSS.astype('str')
+    df_long['ReqMem'] = df_long.MaxReqMem.astype('str')
 
     df_long['JobID'] = df_long.JobID.map(lambda x: x.split('.')[0])
     df_long['MaxRSS'] = df_long.MaxRSS.str.replace('G', '').astype('float')
