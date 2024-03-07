@@ -59,18 +59,18 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     elif account != None:
         fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster'
         if cluster != None:
-            q = f'sacct -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster}'
+            q = f'sacct -a -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster}'
         else:
-            q = f'sacct -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime}'
+            q = f'sacct -a -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime}'
         res = subprocess.check_output([q], shell=True)
         res = str(res, 'utf-8')
         df_short = pd.read_csv(StringIO(res), sep='|')
 
         fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxRSS'
         if cluster != None:
-            q = f'sacct --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster}'
+            q = f'sacct -a --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster}'
         else:
-            q = f'sacct --units=G -P {fmt} -A {account} -S {starttime} -E {endtime}'
+            q = f'sacct -a --units=G -P {fmt} -A {account} -S {starttime} -E {endtime}'
         res = subprocess.check_output([q], shell=True)
         res = str(res, 'utf-8')
         df_long = pd.read_csv(StringIO(res), sep='|')
