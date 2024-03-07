@@ -87,6 +87,9 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     df_short = df_short.fillna(0.)
     df_long  = df_long.fillna(0.)
 
+    df_long['MaxRSS'] = df_long.MaxRSS.astype('float')
+    df_long['ReqMem'] = df_long.MaxReqMem.astype('float')
+
     df_long['JobID'] = df_long.JobID.map(lambda x: x.split('.')[0])
     df_long['MaxRSS'] = df_long.MaxRSS.str.replace('G', '').astype('float')
     df_long['ReqMem'] = df_long.ReqMem.str.replace('G', '').astype('float')
@@ -132,7 +135,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     df_long_finished = df_long[df_long.State.isin(finished_state)]    
 
     if len(df_long_finished) == 0:
-        print(f"No jobs in {job_id} have completed.")
+        print(f"No jobs in have completed.")
         return -1
     
     cpu_use =  df_long_finished.TotalCPU.loc[df_long_finished.groupby('JobID')['TotalCPU'].idxmax()]
