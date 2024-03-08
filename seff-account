@@ -141,8 +141,12 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     cpu_use =  df_long_finished.TotalCPU.loc[df_long_finished.groupby('JobID')['TotalCPU'].idxmax()]
     cpu_req =  df_long_finished.ReqCPUS.loc[df_long_finished.groupby('JobID')['ReqCPUS'].idxmax()]
     time_use = df_long_finished.Elapsed.loc[df_long_finished.groupby('JobID')['Elapsed'].idxmax()]
+    time_req = df_long_finished.Timelimit.loc[df_long_finished.groupby('JobID')['Timelimit'].idxmax()]
     mem_use =  df_long_finished.MaxRSS.loc[df_long_finished.groupby('JobID')['MaxRSS'].idxmax()]
+    mem_req =  df_long_finished.ReqMem.loc[df_long_finished.groupby('JobID')['ReqMem'].idxmax()]
     cpu_eff = np.divide(np.divide(cpu_use.to_numpy(), time_use.to_numpy(), out=np.zeros_like(cpu_use.to_numpy()), where=time_use.to_numpy()!=0), cpu_req.to_numpy())
+    mem_eff = np.divide(mem_use.to_numpy(), mem_req.to_numpy(), out=np.zeros_like(mem_use.to_numpy()), where=mem_req.to_numpy()!=0)
+    time_eff = np.divide(time_use.to_numpy(), time_req.to_numpy(), out=np.zeros_like(time_use.to_numpy()), where=time_req.to_numpy()!=0)
 
     print("--------------------------------------------------------")
     print("Finished Job Statistics")
@@ -160,13 +164,13 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     
     print('\nMemory Efficiency (%)\n---------------------')
     fig = tpl.figure()
-    h, bin_edges = np.histogram(mem_use*100/float(req_mem[0:-1]), bins=np.linspace(0,100,num=11))
+    h, bin_edges = np.histogram(mem_eff*100, bins=np.linspace(0,100,num=11))
     fig.hist(h, bin_edges, orientation='horizontal')
     fig.show()
     
     print('\nTime Efficiency (%)\n---------------------')
     fig = tpl.figure()
-    h, bin_edges = np.histogram(time_use*100/time_to_float(req_time), bins=np.linspace(0,100,num=11))
+    h, bin_edges = np.histogram(time_eff*100, bins=np.linspace(0,100,num=11))
     fig.hist(h, bin_edges, orientation='horizontal')
     fig.show()
 
