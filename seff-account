@@ -112,7 +112,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     nodes = df_short['NNodes'].mean()
     cores = df_short['ReqCPUS'].mean()
     req_mem = df_long['ReqMem'].mean()
-    req_time = df_short['Timelimit'].mean()
+    req_time = df_long['Timelimit'].mean()
     
     print("--------------------------------------------------------")
     print("Job Information")
@@ -121,7 +121,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     print(f"User/Group: {user}/{group}")
     print(f"Average Requested CPUs: {cores} cores on {nodes} node(s)")
     print(f"Average Requested Memory: {req_mem}G")
-    print(f"Average Requested Time: {req_time}")
+    print(f"Average Requested Time: {req_time}s")
     print("--------------------------------------------------------")
     
     print("Job Status")
