@@ -105,9 +105,9 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
         job_id = df_short['JobID'][0].split('_')[0]
         array_job = True
     
-    job_name = df_short['JobName'].unique
+    job_name = df_short['JobName'].unique()
     cluster = df_short['Cluster'][0]
-    user = df_short['User'].unique
+    user = df_short['User'].unique()
     group = df_short['Group'][0]
     nodes = df_short['NNodes'].mean()
     cores = df_short['ReqCPUS'].mean()
