@@ -112,7 +112,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     nodes = df_short['NNodes'].mean()
     cores = df_short['ReqCPUS'].mean()
     req_mem = df_long['ReqMem'].mean()
-    req_time = df_long['Timelimit'].mean()
+    req_time = df_long['Timelimit'].groupby('JobID').mean()
 
     job_name = ', '.join(job_name)
     username = ', '.join(username)
