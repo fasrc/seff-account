@@ -109,19 +109,19 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     cluster = df_short['Cluster'][0]
     user = df_short['User'][0]
     group = df_short['Group'][0]
-    nodes = df_short['NNodes'][0]
-    cores = df_short['ReqCPUS'][0]
-    req_mem = df_short['ReqMem'][0]
-    req_time = df_short['Timelimit'][0]
+    nodes = df_short['NNodes'].mean()
+    cores = df_short['ReqCPUS'].mean()
+    req_mem = df_short['ReqMem'].mean()
+    req_time = df_short['Timelimit'].mean()
     
     print("--------------------------------------------------------")
     print("Job Information")
     print(f"Name: {job_name}")
     print(f"Cluster: {cluster}")
     print(f"User/Group: {user}/{group}")
-    print(f"Requested CPUs: {cores} cores on {nodes} node(s)")
-    print(f"Requested Memory: {req_mem}")
-    print(f"Requested Time: {req_time}")
+    print(f"Average Requested CPUs: {cores} cores on {nodes} node(s)")
+    print(f"Average Requested Memory: {req_mem}")
+    print(f"Average Requested Time: {req_time}")
     print("--------------------------------------------------------")
     
     print("Job Status")
@@ -139,9 +139,10 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
         return -1
     
     cpu_use =  df_long_finished.TotalCPU.loc[df_long_finished.groupby('JobID')['TotalCPU'].idxmax()]
+    cpu_req =  df_long_finished.ReqCPUS.loc[df_long_finished.groupby('JobID')['ReqCPUS'].idxmax()]
     time_use = df_long_finished.Elapsed.loc[df_long_finished.groupby('JobID')['Elapsed'].idxmax()]
     mem_use =  df_long_finished.MaxRSS.loc[df_long_finished.groupby('JobID')['MaxRSS'].idxmax()]
-    cpu_eff = np.divide(np.divide(cpu_use.to_numpy(), time_use.to_numpy(), out=np.zeros_like(cpu_use.to_numpy()), where=time_use.to_numpy()!=0),cores)
+    cpu_eff = np.divide(np.divide(cpu_use.to_numpy(), time_use.to_numpy(), out=np.zeros_like(cpu_use.to_numpy()), where=time_use.to_numpy()!=0), cpu_req.numpy())
 
     print("--------------------------------------------------------")
     print("Finished Job Statistics")
