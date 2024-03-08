@@ -114,7 +114,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     req_mem = df_long['ReqMem'].mean()
     req_time = df_long['Timelimit'].mean()
 
-    jobname = ', '.join(jobname)
+    job_name = ', '.join(job_name)
     username = ', '.join(username)
     
     print("--------------------------------------------------------")
