@@ -141,7 +141,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     cpu_use =  df_long_finished.TotalCPU.loc[df_long_finished.groupby('JobID')['TotalCPU'].idxmax()]
     time_use = df_long_finished.Elapsed.loc[df_long_finished.groupby('JobID')['Elapsed'].idxmax()]
     mem_use =  df_long_finished.MaxRSS.loc[df_long_finished.groupby('JobID')['MaxRSS'].idxmax()]
-    cpu_eff = np.divide(np.divide(cpu_use.to_numpy(), time_use.to_numpy()),cores)
+    cpu_eff = np.divide(np.divide(cpu_use.to_numpy(), time_use.to_numpy(), out=np.zeros_like(cpu_use.to_numpy()), where=time_use.to_numpy()!=0),cores)
 
     print("--------------------------------------------------------")
     print("Finished Job Statistics")
