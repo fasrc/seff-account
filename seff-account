@@ -121,7 +121,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     print(f"User: {user}")
     print(f"Account: {group}")
     print(f"Start Time: {starttime}")
-    print(f"End Time: {starttime}")
+    print(f"End Time: {endtime}")
     print(f"Average Requested CPUs: {cores:.2f} cores on {nodes:.2f} node(s)")
     print(f"Average Requested Memory: {req_mem:.2f}G")
     print(f"Average Requested Time: {req_time:.2f}s")
