@@ -119,9 +119,9 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     
     print("--------------------------------------------------------")
     print("Job Information")
-    print(f"Name: {job_name}")
+    print(f"Names: {job_name}")
     print(f"Cluster: {cluster}")
-    print(f"User: {username}")
+    print(f"Users: {username}")
     print(f"Account: {group}")
     print(f"Start Time: {starttime}")
     print(f"End Time: {endtime}")
