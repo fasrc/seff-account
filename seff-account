@@ -205,6 +205,6 @@ if __name__ == "__main__":
     parser.add_argument("-E", "--endtime", action="store", dest="endtime", default="now")   
     parser.add_argument("-c", "--cluster", action="store", dest="cluster")
     parser.add_argument('--version', action='version',  version='%(prog)s {version}'.format(version=__version__))
-    args = parser.parse_args()
+    args = parser.parse_args(args=None if sys.argv[1:] else ['--help'])
 
     job_eff(args.user, args.account, args.starttime, args.endtime, args.cluster)
