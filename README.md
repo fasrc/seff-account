@@ -13,3 +13,5 @@ seff-account generates three types of histograms:
     seff-account [-a account] [-c cluster] [-u username] [-S start time] [-E end time]
 
 If run on a cluster that shares a single Slurm database, you can pass the name of the alternate cluster via `-c cluster`.  The `SLURM_CLUSTER_NAME` env-var is checked and passed to `sacct` if present. 
+
+Start time and end time are formatted the same as the [sacct](https://slurm.schedmd.com/sacct.html) command. By default it looks over the last day.

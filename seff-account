@@ -190,6 +190,13 @@ if __name__ == "__main__":
     https://github.com/fasrc/seff-account
     ---------------
     An extension of the Slurm command 'seff' designed to summarize job usage for users and accounts over a period of time and display information in a histogram.
+
+    When passed a user or account (note that for accounts outside of what the user is a member of that user must be either an Operator or Administrator), this
+    command produces a summary of that user or account over the period specified (default is last day). Time arguments for starttime and endtime are
+    the same as the sacct command. The summary includes a list of active users, job names, average time, memory, and cpu.
+    
+    It also generates histograms of the efficiency of the job. For cpu efficiency the cpu time is divided by elapsed time multipled by the number of requested cores.
+    For memory efficiency the MaxRSS is divided by the amount of memory requested by the job. For time the amount of time used is divided by the time requested.
     -----------------
     """
         % __version__
