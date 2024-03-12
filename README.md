@@ -1,6 +1,6 @@
 # seff-account
 
-A modification of [seff-array](https://github.com/ycrc/seff-array) by Yale Center for Research Computing which is an extension of the Slurm command 'seff' designed to handle summarizing job usage for users and accounts over a period of time displays the information in a histogram.       
+A modification of [seff-array](https://github.com/ycrc/seff-array) by Yale Center for Research Computing which is an extension of the Slurm command 'seff' designed to handle summarizing job usage for users and accounts over a period of time displays the information in a histogram. Note that if the user does not belong to the relevant account no data will be returned unless that user is an Operator or Administrator in the slurm database.
 
 seff-account generates three types of histograms: 
 
