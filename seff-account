@@ -152,13 +152,14 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     time_req = df_long_finished.Timelimit.loc[df_long_finished.groupby('JobID')['Timelimit'].idxmax()]
     mem_use =  df_long_finished.MaxRSS.loc[df_long_finished.groupby('JobID')['MaxRSS'].idxmax()]
     mem_req =  df_long_finished.ReqMem.loc[df_long_finished.groupby('JobID')['ReqMem'].idxmax()]
-    cpu_eff = np.divide(np.divide(cpu_use.to_numpy(), time_use.to_numpy(), out=np.zeros_like(cpu_use.to_numpy()), where=time_use.to_numpy()!=0), cpu_req.to_numpy())
-    mem_eff = np.divide(mem_use.to_numpy(), mem_req.to_numpy(), out=np.zeros_like(mem_use.to_numpy()), where=mem_req.to_numpy()!=0)
-    time_eff = np.divide(time_use.to_numpy(), time_req.to_numpy(), out=np.zeros_like(time_use.to_numpy()), where=time_req.to_numpy()!=0)
+    cpu_eff = np.divide(np.divide(cpu_use.to_numpy(), time_use.to_numpy(), out=np.zeros_like(cpu_use.to_numpy()), where=time_use.to_numpy()!=0), cpu_req.to_numpy()).clip(0,1.0)
+    mem_eff = np.divide(mem_use.to_numpy(), mem_req.to_numpy(), out=np.zeros_like(mem_use.to_numpy()), where=mem_req.to_numpy()!=0).clip(0,1.0)
+    time_eff = np.divide(time_use.to_numpy(), time_req.to_numpy(), out=np.zeros_like(time_use.to_numpy()), where=time_req.to_numpy()!=0).clip(0,1.0)
 
     print("--------------------------------------------------------")
     print("Finished Job Statistics")
     print("(excludes pending, running, and cancelled jobs)")
+    print(f"Total Number of Jobs: {len(cpu_eff)}")
     print(f"Average CPU Efficiency {cpu_eff.mean()*100:.2f}%")
     print(f"Average Memory Usage {mem_use.mean():.2f}G")
     print(f"Average Run-time {time_use.mean():.2f}s")
