@@ -111,7 +111,7 @@ Keep in mind that plotting a graph on the command line is not an easy task.
 
 Each line represents a bin on a histogram. First line is from 0 to 10% CPU efficiency, second line is from 10 to 20% CPU efficiency, third line is from 20 to 30% CPU efficiency, and so on.
 
-In this example, we can see that most jobs (18 out of 26) had a CPU efficiency of 10%. Thus, users in jharvard_lab, should look into improving cpu efficiency.
+In this example, we can see that most jobs (18 out of 26) had a CPU efficiency of 10%. Thus, users in jharvard_lab, should investigate which jobs are not CPU efficient and then look into improving their CPU efficiency.
 
 
 ```
