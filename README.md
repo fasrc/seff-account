@@ -44,6 +44,7 @@ TIMEOUT: 11
 --------------------------------------------------------
 Finished Job Statistics
 (excludes pending, running, and cancelled jobs)
+Total Number of Jobs: 26
 Average CPU Efficiency 7.98%
 Average Memory Usage 2.87G
 Average Run-time 9187.96s
@@ -86,7 +87,7 @@ Time Efficiency (%)
 +6.00e+01 - +7.00e+01  [ 0]
 +7.00e+01 - +8.00e+01  [ 0]
 +8.00e+01 - +9.00e+01  [ 1]  ███▋
-+9.00e+01 - +1.00e+02  [ 0]
++9.00e+01 - +1.00e+02  [11]  ████████████████████████████████████████
 --------------------------------------------------------
 ```
 
