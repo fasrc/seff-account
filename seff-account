@@ -100,13 +100,6 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     df_long['Timelimit'] = df_long.Timelimit.map(lambda x: time_to_float(x))
 
     # job info
-    if isinstance(df_short['JobID'][0], np.int64):
-        job_id = df_short['JobID'][0]
-        array_job = False
-    else:
-        job_id = df_short['JobID'][0].split('_')[0]
-        array_job = True
-    
     job_name = df_short['JobName'].unique()
     cluster = df_short['Cluster'][0]
     username = df_short['User'].unique()
