@@ -41,45 +41,42 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     if user != None:
         fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster'
         if cluster != None:
-            q = f'sacct -X --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --cluster {cluster}'
+            q = f'sacct -X --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --cluster {cluster} --state=CA,CD,F,OOM,TO'
         else:
-            q = f'sacct -X --units=G -P {fmt} -u {user} -S {starttime} -E {endtime}'
+            q = f'sacct -X --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --state=CA,CD,F,OOM,TO'
         res = subprocess.check_output([q], shell=True)
         res = str(res, 'utf-8')
         df_short = pd.read_csv(StringIO(res), sep='|')
 
         fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxRSS'
         if cluster != None:
-            q = f'sacct --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --cluster {cluster}'
+            q = f'sacct --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --cluster {cluster} --state=CA,CD,F,OOM,TO'
         else:
-            q = f'sacct --units=G -P {fmt} -u {user} -S {starttime} -E {endtime}'
+            q = f'sacct --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --state=CA,CD,F,OOM,TO'
         res = subprocess.check_output([q], shell=True)
         res = str(res, 'utf-8')
         df_long = pd.read_csv(StringIO(res), sep='|')
     elif account != None:
         fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster'
         if cluster != None:
-            q = f'sacct -a -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster}'
+            q = f'sacct -a -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster} --state=CA,CD,F,OOM,TO'
         else:
-            q = f'sacct -a -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime}'
+            q = f'sacct -a -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --state=CA,CD,F,OOM,TO'
         res = subprocess.check_output([q], shell=True)
         res = str(res, 'utf-8')
         df_short = pd.read_csv(StringIO(res), sep='|')
 
         fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxRSS'
         if cluster != None:
-            q = f'sacct -a --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster}'
+            q = f'sacct -a --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster} --state=CA,CD,F,OOM,TO'
         else:
-            q = f'sacct -a --units=G -P {fmt} -A {account} -S {starttime} -E {endtime}'
+            q = f'sacct -a --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --state=CA,CD,F,OOM,TO'
         res = subprocess.check_output([q], shell=True)
         res = str(res, 'utf-8')
         df_long = pd.read_csv(StringIO(res), sep='|')
 
-    # filter out pending and running jobs
-    finished_state = ['COMPLETED', 'FAILED', 'OUT_OF_MEMORY', 'TIMEOUT', 'PREEMPTEED']
-    df_long_finished = df_long[df_long.State.isin(finished_state)]
 
-    if len(df_long_finished) == 0:
+    if len(df_long) == 0:
         print(f"No jobs have completed.")
         return -1
         
@@ -130,28 +127,19 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     for s in states:
         print(f"{s}: {len(df_short[df_short.State == s])}")
     print("--------------------------------------------------------")
-    
-    # filter out pending and running jobs
-    finished_state = ['COMPLETED', 'FAILED', 'OUT_OF_MEMORY', 'TIMEOUT', 'PREEMPTEED']
-    df_long_finished = df_long[df_long.State.isin(finished_state)]    
-
-    if len(df_long_finished) == 0:
-        print(f"No jobs in have completed.")
-        return -1
-    
-    cpu_use =  df_long_finished.TotalCPU.loc[df_long_finished.groupby('JobID')['TotalCPU'].idxmax()]
-    cpu_req =  df_long_finished.ReqCPUS.loc[df_long_finished.groupby('JobID')['ReqCPUS'].idxmax()]
-    time_use = df_long_finished.Elapsed.loc[df_long_finished.groupby('JobID')['Elapsed'].idxmax()]
-    time_req = df_long_finished.Timelimit.loc[df_long_finished.groupby('JobID')['Timelimit'].idxmax()]
-    mem_use =  df_long_finished.MaxRSS.loc[df_long_finished.groupby('JobID')['MaxRSS'].idxmax()]
-    mem_req =  df_long_finished.ReqMem.loc[df_long_finished.groupby('JobID')['ReqMem'].idxmax()]
+        
+    cpu_use =  df_long.TotalCPU.loc[df_long.groupby('JobID')['TotalCPU'].idxmax()]
+    cpu_req =  df_long.ReqCPUS.loc[df_long.groupby('JobID')['ReqCPUS'].idxmax()]
+    time_use = df_long.Elapsed.loc[df_long.groupby('JobID')['Elapsed'].idxmax()]
+    time_req = df_long.Timelimit.loc[df_long.groupby('JobID')['Timelimit'].idxmax()]
+    mem_use =  df_long.MaxRSS.loc[df_long.groupby('JobID')['MaxRSS'].idxmax()]
+    mem_req =  df_long.ReqMem.loc[df_long.groupby('JobID')['ReqMem'].idxmax()]
     cpu_eff = np.divide(np.divide(cpu_use.to_numpy(), time_use.to_numpy(), out=np.zeros_like(cpu_use.to_numpy()), where=time_use.to_numpy()!=0), cpu_req.to_numpy()).clip(0,1.0)
     mem_eff = np.divide(mem_use.to_numpy(), mem_req.to_numpy(), out=np.zeros_like(mem_use.to_numpy()), where=mem_req.to_numpy()!=0).clip(0,1.0)
     time_eff = np.divide(time_use.to_numpy(), time_req.to_numpy(), out=np.zeros_like(time_use.to_numpy()), where=time_req.to_numpy()!=0).clip(0,1.0)
 
     print("--------------------------------------------------------")
-    print("Finished Job Statistics")
-    print("(excludes pending, running, and cancelled jobs)")
+    print("Job Statistics")
     print(f"Total Number of Jobs: {len(cpu_eff)}")
     print(f"Average CPU Efficiency {cpu_eff.mean()*100:.2f}%")
     print(f"Average Memory Usage {mem_use.mean():.2f}G")
