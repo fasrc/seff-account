@@ -42,8 +42,7 @@ OUT_OF_MEMORY: 1
 TIMEOUT: 11
 --------------------------------------------------------
 --------------------------------------------------------
-Finished Job Statistics
-(excludes pending, running, and cancelled jobs)
+Job Statistics
 Total Number of Jobs: 26
 Average CPU Efficiency 7.98%
 Average Memory Usage 2.87G
