@@ -4,10 +4,10 @@ A modification of [seff-array](https://github.com/ycrc/seff-array) by Yale Cente
 
 seff-account generates three types of histograms: 
 
-    1. CPU Efficiency (utilization vs runtime)
-    2. GPU Efficiency (From [Princeton Job Stats](https://princetonuniversity.github.io/jobstats/))
-    3. Maximum memory usage versus the requested memory
-    4. Runtime of each job compared to the requested wall-time
+  1. CPU Efficiency (utilization vs runtime)
+  2. GPU Efficiency (From [Princeton Job Stats](https://princetonuniversity.github.io/jobstats/))
+  3. Maximum memory usage versus the requested memory
+  4. Runtime of each job compared to the requested wall-time
 
 ## Usage:
 
