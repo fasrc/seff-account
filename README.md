@@ -1,12 +1,13 @@
 # seff-account
 
-A modification of [seff-array](https://github.com/ycrc/seff-array) by Yale Center for Research Computing which is an extension of the Slurm command 'seff' designed to handle summarizing job usage for users and accounts over a period of time displays the information in a histogram. Note that if the user does not belong to the relevant account no data will be returned unless that user is an Operator or Administrator in the slurm database.
+A modification of [seff-array](https://github.com/ycrc/seff-array) by Yale Center for Research Computing which is an extension of the Slurm command 'seff' designed to handle summarizing job usage for users and accounts over a period of time displays the information in a histogram. Note that if the user does not belong to the relevant account no data will be returned unless that user is an Operator or Administrator in the slurm database. Also note that this script depends on having [Job Summaries](https://princetonuniversity.github.io/jobstats/setup/summaries/) stored in the AdminComment of sacct from [Princeton Jobstats](https://princetonuniversity.github.io/jobstats/).
 
 seff-account generates three types of histograms: 
 
     1. CPU Efficiency (utilization vs runtime)
-    1. Maximum memory usage versus the requested memory
-    2. Runtime of each job compared to the requested wall-time
+    2. GPU Efficiency (From [Princeton Job Stats](https://princetonuniversity.github.io/jobstats/))
+    3. Maximum memory usage versus the requested memory
+    4. Runtime of each job compared to the requested wall-time
 
 ## Usage:
 
@@ -31,6 +32,7 @@ Account: jharvard_lab
 Start Time: 2024-09-15T00:00:00
 End Time: 2024-09-20T00:00:00
 Average Requested CPUs: 1.58 cores on 1.00 node(s)
+Average Requested GPUS: 2.96
 Average Requested Memory: 18.82G
 Average Requested Time: 16038.46s
 --------------------------------------------------------
@@ -44,7 +46,9 @@ TIMEOUT: 11
 --------------------------------------------------------
 Job Statistics
 Total Number of Jobs: 26
+Total Number of GPU Jobs: 25
 Average CPU Efficiency 7.98%
+Average GPU Efficiency 36.72%
 Average Memory Usage 2.87G
 Average Run-time 9187.96s
 ---------------------
@@ -61,6 +65,19 @@ CPU Efficiency (%)
 +7.00e+01 - +8.00e+01  [ 0]
 +8.00e+01 - +9.00e+01  [ 0]
 +9.00e+01 - +1.00e+02  [ 0]
+
+GPU Efficiency (%)
+---------------------
++0.00e+00 - +1.00e+01  [7]  ████████████████████████████████████████
++1.00e+01 - +2.00e+01  [3]  █████████████████▏
++2.00e+01 - +3.00e+01  [4]  ██████████████████████▉
++3.00e+01 - +4.00e+01  [2]  ███████████▍
++4.00e+01 - +5.00e+01  [0]
++5.00e+01 - +6.00e+01  [1]  █████▊
++6.00e+01 - +7.00e+01  [2]  ███████████▍
++7.00e+01 - +8.00e+01  [2]  ███████████▍
++8.00e+01 - +9.00e+01  [2]  ███████████▍
++9.00e+01 - +1.00e+02  [2]  ███████████▍
 
 Memory Efficiency (%)
 ---------------------
@@ -101,6 +118,7 @@ Time Efficiency (%)
   - CANCELLED by 98765: total of job cancelled by user 98765 (you can check which `uid` is yours with the command `id`) 
 - **Finished Job Statistics:** summary of all finished jobs. This includes completed, failed, out_of_memory, timeout, and preempted jobs. It excludes pending, running, and cancelled jobs.
 - **CPU Efficiency (%)**: horizontal histogram representing the number of jobs that falls within that CPU % efficiency
+- **GPU Efficiency (%)**: horizontal histogram representing the number of jobs that falls within that GPU % efficiency, only shows up if there are GPU jobs.
 - **Memory Efficiency (%)**: horizontal histogram representing the number of jobs that falls within that memory % efficiency
 - **Time Efficiency (%)**: horizontal histogram representing the number of jobs that falls within that time % efficiency
 
@@ -128,4 +146,4 @@ In this example, we can see that most jobs (18 out of 26) had a CPU efficiency o
 
 ## Improving your jobs
 
-Ideally, most jobs would fall in to 90 to 100% CPU, memory, and time efficiency (last line of a histogram). For more information on improving your jobs, see [Job Efficiency and Optimization Best Practices](https://docs.rc.fas.harvard.edu/kb/job-efficiency-and-optimization-best-practices/)
+Ideally, most jobs would fall in to 90 to 100% CPU, GPU, memory, and time efficiency (last line of a histogram). For more information on improving your jobs, see [Job Efficiency and Optimization Best Practices](https://docs.rc.fas.harvard.edu/kb/job-efficiency-and-optimization-best-practices/)
