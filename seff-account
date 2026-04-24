@@ -79,7 +79,7 @@ def gpu_util(js):
 def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_NAME')):
 
     if user != None:
-        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,AdminComment'
+        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Account,Cluster,AdminComment'
         if cluster != None:
             q = f'sacct -X --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --cluster {cluster} --state=CA,CD,F,OOM,TO'
         else:
@@ -88,7 +88,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
         res = str(res, 'utf-8')
         df_short = pd.read_csv(StringIO(res), sep='|')
 
-        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxRSS,AdminComment'
+        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Account,Cluster,MaxRSS,AdminComment'
         if cluster != None:
             q = f'sacct --units=G -P {fmt} -u {user} -S {starttime} -E {endtime} --cluster {cluster} --state=CA,CD,F,OOM,TO'
         else:
@@ -97,7 +97,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
         res = str(res, 'utf-8')
         df_long = pd.read_csv(StringIO(res), sep='|')
     elif account != None:
-        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,AdminComment'
+        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Account,Cluster,AdminComment'
         if cluster != None:
             q = f'sacct -a -X --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster} --state=CA,CD,F,OOM,TO'
         else:
@@ -106,7 +106,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
         res = str(res, 'utf-8')
         df_short = pd.read_csv(StringIO(res), sep='|')
 
-        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Group,Cluster,MaxRSS,AdminComment'
+        fmt = '--format=JobID,JobName,Elapsed,ReqMem,ReqCPUS,Timelimit,State,TotalCPU,NNodes,User,Account,Cluster,MaxRSS,AdminComment'
         if cluster != None:
             q = f'sacct -a --units=G -P {fmt} -A {account} -S {starttime} -E {endtime} --cluster {cluster} --state=CA,CD,F,OOM,TO'
         else:
@@ -142,7 +142,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     job_name = df_short['JobName'].unique()
     cluster = df_short['Cluster'][0]
     username = df_short['User'].unique()
-    group = df_short['Group'][0]
+    accountdisplay = df_short['Account'].unique()
     nodes = df_long.NNodes.loc[df_long.groupby('JobID')['NNodes'].idxmax()].mean()
     cores = df_long.ReqCPUS.loc[df_long.groupby('JobID')['ReqCPUS'].idxmax()].mean()
     if len(gpu_req[gpu_req != 0]) != 0:
@@ -160,7 +160,7 @@ def job_eff(user, account, starttime, endtime, cluster=os.getenv('SLURM_CLUSTER_
     print(f"Names: {job_name}")
     print(f"Cluster: {cluster}")
     print(f"Users: {username}")
-    print(f"Account: {group}")
+    print(f"Account: {accountdisplay}")
     print(f"Start Time: {starttime}")
     print(f"End Time: {endtime}")
     print(f"Average Requested CPUs: {cores:.2f} cores on {nodes:.2f} node(s)")
